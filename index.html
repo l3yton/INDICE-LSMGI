@@ -274,11 +274,11 @@
             <form action="https://formsubmit.co/gonzalooleytonn@gmail.com" method="POST">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="email" name="email">
+                    <input type="text" class="form-control" id="nombre" name="name" placeholder="Tu nombre" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo Electrónico</label>
-                    <input type="email" name="email">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Tu correo electrónico" required>
                 </div>
                 <div class="mb-3">
                     <label for="mensaje" class="form-label">Mensaje</label>
@@ -286,7 +286,8 @@
                 </div>
 
                 <!-- Configuraciones adicionales -->
-                <input type="email" name="email">
+                <input type="hidden" name="_next" value="https://tusitio.com/gracias.html">
+                <input type="hidden" name="_captcha" value="false">
 
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </form>
