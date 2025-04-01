@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario vehículos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .section {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .section select,
+        .section input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .radio-group input {
+            transform: translateY(25px); 
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #prompt, #respuesta {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Selección de Características del Vehículo</h2>
+
+        <div class="section">
+            <label>Marca</label>
+            <select id="marca">
+                <option value="BMW">BMW</option>
+                <option value="MERCEDES">MERCEDES</option>
+                <option value="AUDI">AUDI</option>
+                <option value="PORSCHE">PORSCHE</option>
+                <option value="ASTON MARTIN">ASTON MARTIN</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <label>Tipo de motor</label>
+            <div class="radio-group">
+                <input type="radio" name="motor" value="Gasolina"> Gasolina
+                <input type="radio" name="motor" value="Diésel"> Diésel
+                <input type="radio" name="motor" value="Híbrido"> Híbrido
+                <input type="radio" name="motor" value="Eléctrico"> Eléctrico
+            </div>
+        </div>
+
+        <div class="section">
+            <label>Transmisión</label>
+            <div class="radio-group">
+                <input type="radio" name="transmision" value="Manual"> Manual
+                <input type="radio" name="transmision" value="Automática"> Automática
+                <input type="radio" name="transmision" value="CVT"> CVT
+                <input type="radio" name="transmision" value="Doble embrague"> Doble embrague
+            </div>
+        </div>
+
+        <div class="section">
+            <label>Tracción</label>
+            <div class="radio-group">
+                <input type="radio" name="traccion" value="Delantera (FWD)"> Delantera (FWD)
+                <input type="radio" name="traccion" value="Trasera (RWD)"> Trasera (RWD)
+                <input type="radio" name="traccion" value="Total o integral (AWD, 4x4)"> Total o integral (AWD, 4x4)
+            </div>
+        </div>
+
+        <div class="section">
+            <label>Tipo de carrocería</label>
+            <div class="radio-group">
+                <input type="radio" name="carroceria" value="Hatchback"> Hatchback
+                <input type="radio" name="carroceria" value="Sedán"> Sedán
+                <input type="radio" name="carroceria" value="Coupé"> Coupé
+                <input type="radio" name="carroceria" value="Cabrio/Descapotable"> Cabrio
+                <input type="radio" name="carroceria" value="Superdeportivo"> Superdeportivo
+                <input type="radio" name="carroceria" value="SUV"> SUV
+                <input type="radio" name="carroceria" value="Todoterreno"> Todoterreno
+                <input type="radio" name="carroceria" value="Monovolumen"> Monovolumen
+                <input type="radio" name="carroceria" value="Familiar"> Familiar
+                <input type="radio" name="carroceria" value="Pick-up"> Pick-up
+            </div>
+        </div>
+
+        <div class="section">
+            <label>Número de puertas</label>
+            <div class="radio-group">
+                <input type="radio" name="puertas" value="2 puertas"> 2 puertas
+                <input type="radio" name="puertas" value="3 puertas"> 3 puertas
+                <input type="radio" name="puertas" value="5 puertas"> 5 puertas
+            </div>
+        </div>
+
+        <button onclick="generarPrompt()">Generar Prompt y Consultar IA</button>
+
+        <div id="prompt"></div>
+        <div id="respuesta"></div>
+    </div>
+
+    <script>
+        function generarPrompt() {
+            let marca = document.getElementById("marca").value;
+            let motor = document.querySelector('input[name="motor"]:checked')?.value;
+            let transmision = document.querySelector('input[name="transmision"]:checked')?.value;
+            let traccion = document.querySelector('input[name="traccion"]:checked')?.value;
+            let carroceria = document.querySelector('input[name="carroceria"]:checked')?.value;
+            let puertas = document.querySelector('input[name="puertas"]:checked')?.value;
+    
+            if (!motor || !transmision || !traccion || !carroceria || !puertas) {
+                document.getElementById("prompt").innerText = "Por favor, selecciona todas las opciones.";
+                return;
+            }
+    
+            let prompt = `Quiero los 3 mejores coches que sean de la marca ${marca} con motor ${motor}, transmisión ${transmision}, tracción ${traccion}, carrocería ${carroceria} y ${puertas}.`;
+            document.getElementById("prompt").innerText = prompt;
+    
+            consultarIA(prompt);
+        }
+    
+        function consultarIA(prompt) {
+            let apiKey = "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";
+    
+            fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-4",
+                    messages: [{ role: "user", content: prompt }]
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("respuesta").innerText = data.choices[0].message.content;
+            })
+            .catch(error => {
+                document.getElementById("respuesta").innerText = "Error al obtener respuesta.";
+            });
+        }
+    </script>
+    
+</body>
+</html>
