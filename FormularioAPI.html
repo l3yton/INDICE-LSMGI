@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrícula</title>
+    <title>Formulario vehículos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,17 +35,21 @@
             display: block;
             margin-bottom: 5px;
         }
-        .section input, .section select {
+        .section select,
+        .section input {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        .checkbox-group {
+        .radio-group {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
+        }
+        .radio-group input {
+            transform: translateY(25px); 
         }
         button {
             width: 100%;
@@ -61,79 +65,162 @@
         button:hover {
             background-color: #0056b3;
         }
-        .precio, .error {
+        #prompt, #respuesta, #precio {
+            margin-top: 15px;
             font-weight: bold;
             text-align: center;
             color: #333;
-            margin-top: 10px;
-        }
-        .error {
-            color: red;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Formulario de Matrícula</h2>
+        <h2>Selección de Características del Vehículo</h2>
+
         <div class="section">
-            <label>Horas semanales:</label>
-            <input type="number" id="horas" min="1" required>
+            <label>Marca</label>
+            <select id="marca">
+                <option value="BMW">BMW</option>
+                <option value="MERCEDES">MERCEDES</option>
+                <option value="AUDI">AUDI</option>
+                <option value="PORSCHE">PORSCHE</option>
+                <option value="ASTON MARTIN">ASTON MARTIN</option>
+            </select>
         </div>
 
         <div class="section">
-            <label>Materias:</label>
-            <div class="checkbox-group">
-                <input type="checkbox" id="matematica1"> Matemáticas I
-                <input type="checkbox" id="historia"> Historia
-                <input type="checkbox" id="matematica2"> Matemáticas II
-                <input type="checkbox" id="fisica"> Física
+            <label>Tipo de motor</label>
+            <div class="radio-group">
+                <input type="radio" name="motor" value="Gasolina"> Gasolina
+                <input type="radio" name="motor" value="Diésel"> Diésel
+                <input type="radio" name="motor" value="Híbrido"> Híbrido
+                <input type="radio" name="motor" value="Eléctrico"> Eléctrico
             </div>
         </div>
 
         <div class="section">
-            <label>
-                <input type="checkbox" id="antiguoAlumno"> Soy antiguo alumno
-            </label>
-            <br>
-            <label>
-                <input type="checkbox" id="beca"> Tengo beca
-            </label>
+            <label>Transmisión</label>
+            <div class="radio-group">
+                <input type="radio" name="transmision" value="Manual"> Manual
+                <input type="radio" name="transmision" value="Automática"> Automática
+                <input type="radio" name="transmision" value="CVT"> CVT
+                <input type="radio" name="transmision" value="Doble embrague"> Doble embrague
+            </div>
         </div>
 
-        <button type="button" onclick="calcularPrecio()">Calcular Precio</button>
+        <div class="section">
+            <label>Tracción</label>
+            <div class="radio-group">
+                <input type="radio" name="traccion" value="Delantera (FWD)"> Delantera (FWD)
+                <input type="radio" name="traccion" value="Trasera (RWD)"> Trasera (RWD)
+                <input type="radio" name="traccion" value="Total o integral (AWD, 4x4)"> Total o integral (AWD, 4x4)
+            </div>
+        </div>
 
-        <p class="error" id="errorMensaje">No puedes inscribirte en Matemáticas II sin haber elegido Matemáticas I.</p>
-        <p class="precio" id="precioTotal"></p>
-        <p class="precio" id="precioBeca"></p>
+        <div class="section">
+            <label>Tipo de carrocería</label>
+            <div class="radio-group">
+                <input type="radio" name="carroceria" value="Hatchback"> Hatchback
+                <input type="radio" name="carroceria" value="Sedán"> Sedán
+                <input type="radio" name="carroceria" value="Coupé"> Coupé
+                <input type="radio" name="carroceria" value="Cabrio/Descapotable"> Cabrio
+                <input type="radio" name="carroceria" value="Superdeportivo"> Superdeportivo
+                <input type="radio" name="carroceria" value="SUV"> SUV
+                <input type="radio" name="carroceria" value="Todoterreno"> Todoterreno
+                <input type="radio" name="carroceria" value="Monovolumen"> Monovolumen
+                <input type="radio" name="carroceria" value="Familiar"> Familiar
+                <input type="radio" name="carroceria" value="Pick-up"> Pick-up
+            </div>
+        </div>
+
+        <div class="section">
+            <label>Número de puertas</label>
+            <div class="radio-group">
+                <input type="radio" name="puertas" value="2 puertas"> 2 puertas
+                <input type="radio" name="puertas" value="3 puertas"> 3 puertas
+                <input type="radio" name="puertas" value="5 puertas"> 5 puertas
+            </div>
+        </div>
+
+        <button onclick="generarPrompt()">Generar Prompt y Consultar IA</button>
+
+        <div id="prompt"></div>
+        <div id="respuesta"></div>
+        <div id="precio"></div>
     </div>
-    
+
     <script>
-        function calcularPrecio() {
-            let horas = parseInt(document.getElementById('horas').value);
-            let esAntiguo = document.getElementById('antiguoAlumno').checked;
-            let tieneBeca = document.getElementById('beca').checked;
-            let matematica1 = document.getElementById('matematica1').checked;
-            let matematica2 = document.getElementById('matematica2').checked;
-            let errorMensaje = document.getElementById('errorMensaje');
-            
-            if (matematica2 && !matematica1) {
-                errorMensaje.style.display = 'block';
-                document.getElementById('precioTotal').innerText = '';
-                document.getElementById('precioBeca').innerText = '';
+        function generarPrompt() {
+            let marca = document.getElementById("marca").value;
+            let motor = document.querySelector('input[name="motor"]:checked')?.value;
+            let transmision = document.querySelector('input[name="transmision"]:checked')?.value;
+            let traccion = document.querySelector('input[name="traccion"]:checked')?.value;
+            let carroceria = document.querySelector('input[name="carroceria"]:checked')?.value;
+            let puertas = document.querySelector('input[name="puertas"]:checked')?.value;
+    
+            if (!motor || !transmision || !traccion || !carroceria || !puertas) {
+                document.getElementById("prompt").innerText = "Por favor, selecciona todas las opciones.";
                 return;
-            } else {
-                errorMensaje.style.display = 'none';
             }
-            
-            let precioBase = horas * 20;
-            if (esAntiguo) {
-                precioBase *= 0.65;
+    
+            let prompt = `Quiero los 3 mejores coches que sean de la marca ${marca} con motor ${motor}, transmisión ${transmision}, tracción ${traccion}, carrocería ${carroceria} y ${puertas}.`;
+            document.getElementById("prompt").innerText = prompt;
+    
+            calcularPrecio(marca, motor, transmision, traccion, carroceria, puertas);
+            consultarIA(prompt);
+        }
+
+        function calcularPrecio(marca, motor, transmision, traccion, carroceria, puertas) {
+            let precioBase = 0;
+
+            // Precio base según la marca
+            switch (marca) {
+                case "BMW": precioBase = 50000; break;
+                case "MERCEDES": precioBase = 45000; break;
+                case "AUDI": precioBase = 60000; break;
+                case "PORSCHE": precioBase = 100000; break;
+                case "ASTON MARTIN": precioBase = 120000; break;
             }
-            
-            let precioConBeca = tieneBeca ? precioBase * 0.2 : precioBase;
-            
-            document.getElementById('precioTotal').innerText = `Precio total mensual: ${precioBase.toFixed(2)}€`;
-            document.getElementById('precioBeca').innerText = `Precio con beca: ${precioConBeca.toFixed(2)}€`;
+
+            // Modificar el precio según el motor
+            switch (motor) {
+                case "Gasolina": precioBase += 10000; break;
+                case "Diésel": precioBase += 0; break;
+                case "Híbrido": precioBase += 5000; break;
+                case "Eléctrico": precioBase += 8000; break;
+            }
+
+            // Ajustar según el número de puertas
+            switch (puertas) {
+                case "2 puertas": precioBase -= 3000; break;
+                case "3 puertas": precioBase -= 1000; break;
+                case "5 puertas": precioBase += 2000; break;
+            }
+
+            document.getElementById("precio").innerText = `Precio aproximado: €${precioBase.toLocaleString()}`;
+        }
+
+        function consultarIA(prompt) {
+            let apiKey = "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";
+    
+            fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-4",
+                    messages: [{ role: "user", content: prompt }]
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("respuesta").innerText = data.choices[0].message.content;
+            })
+            .catch(error => {
+                document.getElementById("respuesta").innerText = "Error al obtener respuesta.";
+            });
         }
     </script>
 </body>
