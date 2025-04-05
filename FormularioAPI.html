@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrícula</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .section {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .section input, .section select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .precio, .error {
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Formulario de Matrícula</h2>
+        <div class="section">
+            <label>Horas semanales:</label>
+            <input type="number" id="horas" min="1" required>
+        </div>
+
+        <div class="section">
+            <label>Materias:</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="matematica1"> Matemáticas I
+                <input type="checkbox" id="historia"> Historia
+                <input type="checkbox" id="matematica2"> Matemáticas II
+                <input type="checkbox" id="fisica"> Física
+            </div>
+        </div>
+
+        <div class="section">
+            <label>
+                <input type="checkbox" id="antiguoAlumno"> Soy antiguo alumno
+            </label>
+            <br>
+            <label>
+                <input type="checkbox" id="beca"> Tengo beca
+            </label>
+        </div>
+
+        <button type="button" onclick="calcularPrecio()">Calcular Precio</button>
+
+        <p class="error" id="errorMensaje">No puedes inscribirte en Matemáticas II sin haber elegido Matemáticas I.</p>
+        <p class="precio" id="precioTotal"></p>
+        <p class="precio" id="precioBeca"></p>
+    </div>
+    
+    <script>
+        function calcularPrecio() {
+            let horas = parseInt(document.getElementById('horas').value);
+            let esAntiguo = document.getElementById('antiguoAlumno').checked;
+            let tieneBeca = document.getElementById('beca').checked;
+            let matematica1 = document.getElementById('matematica1').checked;
+            let matematica2 = document.getElementById('matematica2').checked;
+            let errorMensaje = document.getElementById('errorMensaje');
+            
+            if (matematica2 && !matematica1) {
+                errorMensaje.style.display = 'block';
+                document.getElementById('precioTotal').innerText = '';
+                document.getElementById('precioBeca').innerText = '';
+                return;
+            } else {
+                errorMensaje.style.display = 'none';
+            }
+            
+            let precioBase = horas * 20;
+            if (esAntiguo) {
+                precioBase *= 0.65;
+            }
+            
+            let precioConBeca = tieneBeca ? precioBase * 0.2 : precioBase;
+            
+            document.getElementById('precioTotal').innerText = `Precio total mensual: ${precioBase.toFixed(2)}€`;
+            document.getElementById('precioBeca').innerText = `Precio con beca: ${precioConBeca.toFixed(2)}€`;
+        }
+    </script>
+</body>
+</html>
